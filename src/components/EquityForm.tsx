@@ -1,14 +1,30 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import NumericInput from "./components/NumericInput.tsx";
-import SelectInput from "./components/SelectInput.tsx";
+import NumericInput from "./NumericInput.tsx";
+import SelectInput from "./SelectInput.tsx";
 import {useEffect} from "react";
-import CheckboxInput from "./components/CheckboxInput.tsx";
-import SubmitButton from "./components/SubmitButton.tsx";
+import CheckboxInput from "./CheckboxInput.tsx";
+import SubmitButton from "./SubmitButton.tsx";
+// import {calcRSU102} from "../apis/calculator.ts";
+// import {convertToLocale} from "../apis/utils.ts";
 
 const EQUITY_TYPES: string[] = ['RSU', 'ESOP'];
 
-function EquityForm() {
+export interface FormResponse {
+    equityType: string;
+    incomeTax: number;
+    conversionRate: number;
+    totalAmount: number;
+    salePrice: number;
+    grantPrice: number;
+    grantedOverTwoYearsAgo: boolean
+}
+
+interface FormProps {
+    onFormSubmit: (response: FormResponse) => void;
+}
+
+const EquityForm = ({ onFormSubmit }: FormProps) =>{
     const formik = useFormik({
         initialValues: {
             equityType: 'RSU',
@@ -23,7 +39,7 @@ function EquityForm() {
         onSubmit: (values) => {
             localStorage.setItem('incomeTax', values.incomeTax.toString());
             localStorage.setItem('conversionRate', values.conversionRate.toString());
-            console.log(values);
+            onFormSubmit(values);
         },
 
         validationSchema: Yup.object({
@@ -45,32 +61,39 @@ function EquityForm() {
         <form className="w-full max-w-lg" onSubmit={formik.handleSubmit}>
             <div className="flex flex-wrap -mx-3 mb-6">
                 <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                    <SelectInput value={formik.values.equityType} onChange={formik.handleChange} label="Equity Type" name="equityType" options={EQUITY_TYPES} />
+                    <SelectInput value={formik.values.equityType} onChange={formik.handleChange} label="Equity Type"
+                                 name="equityType" options={EQUITY_TYPES}/>
                 </div>
                 <div className="w-1/2 md:w-1/3 px-3 mb-6 md:mb-0">
-                    <NumericInput value={formik.values.incomeTax} onChange={formik.handleChange} label="Income Tax %" name="incomeTax"/>
+                    <NumericInput value={formik.values.incomeTax} onChange={formik.handleChange} label="Income Tax %"
+                                  name="incomeTax"/>
                 </div>
                 <div className="w-1/2 md:w-1/3 px-3">
-                    <NumericInput value={formik.values.conversionRate} onChange={formik.handleChange} label="Amount" name="conversionRate"/>
+                    <NumericInput value={formik.values.conversionRate} onChange={formik.handleChange} label="Amount"
+                                  name="conversionRate"/>
                 </div>
             </div>
             <div className="flex flex-wrap -mx-3 mb-6">
                 <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                    <NumericInput value={formik.values.totalAmount} onChange={formik.handleChange} label="Amount" name="totalAmount"/>
+                    <NumericInput value={formik.values.totalAmount} onChange={formik.handleChange} label="Amount"
+                                  name="totalAmount"/>
                 </div>
                 <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                    <NumericInput value={formik.values.salePrice} onChange={formik.handleChange} label="Sale Price" name="salePrice"/>
+                    <NumericInput value={formik.values.salePrice} onChange={formik.handleChange} label="Sale Price"
+                                  name="salePrice"/>
                 </div>
                 <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                    <NumericInput value={formik.values.grantPrice} onChange={formik.handleChange} label="Grant Price" name="grantPrice"/>
+                    <NumericInput value={formik.values.grantPrice} onChange={formik.handleChange} label="Grant Price"
+                                  name="grantPrice"/>
                 </div>
             </div>
             <div className="flex flex-wrap -mx-3 mb-6">
                 <div className="w-full md:w-2/3 px-3 mb-6 md:mb-0 content-center">
-                    <CheckboxInput checked={formik.values.grantedOverTwoYearsAgo} onChange={formik.handleChange} label="Granted over 2 years ago?" name='grantedOverTwoYearsAgo' />
+                    <CheckboxInput checked={formik.values.grantedOverTwoYearsAgo} onChange={formik.handleChange}
+                                   label="Granted over 2 years ago?" name='grantedOverTwoYearsAgo'/>
                 </div>
                 <div className="w-full md:w-1/3 px-3">
-                    <SubmitButton label="Calculate" disabled={calculateDisabled} />
+                    <SubmitButton label="Calculate" disabled={calculateDisabled}/>
                 </div>
             </div>
         </form>
