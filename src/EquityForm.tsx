@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import * as Yup from "yup";
 
 function EquityForm() {
     const formik = useFormik({
@@ -11,11 +12,21 @@ function EquityForm() {
             grantPrice: 0,
             grantedOverTwoYearsAgo: true
         },
+
         onSubmit: (values) => {
             localStorage.setItem('incomeTax', values.incomeTax.toString());
             localStorage.setItem('conversionRate', values.conversionRate.toString());
+            console.log(formik.errors);
             console.log(values);
         },
+
+        validationSchema: Yup.object({
+            incomeTax: Yup.number().moreThan(0).required(),
+            conversionRate: Yup.number().moreThan(0).required(),
+            totalAmount: Yup.number().moreThan(0).required(),
+            salePrice: Yup.number().moreThan(0).required(),
+            grantPrice: Yup.number().moreThan(0).required(),
+        })
     });
 
     return (
@@ -119,7 +130,7 @@ function EquityForm() {
                     </div>
                 </div>
                 <div className="w-full md:w-1/3 px-3">
-                    <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full py-2 px-4 rounded">
+                    <button type='submit' disabled={Object.keys(formik.errors).length > 0} className={`bg-blue-500 hover:bg-blue-700 text-white font-medium text-sm w-full py-2 px-4 rounded-lg ${Object.keys(formik.errors).length > 0 ? 'text-white bg-blue-400 cursor-not-allowed font-medium text-sm text-center': ''}`}>
                         Calculate
                     </button>
                 </div>
