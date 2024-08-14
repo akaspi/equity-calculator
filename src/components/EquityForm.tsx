@@ -5,8 +5,6 @@ import SelectInput from './SelectInput.tsx';
 import { useEffect } from 'react';
 import CheckboxInput from './CheckboxInput.tsx';
 import SubmitButton from './SubmitButton.tsx';
-// import {calcRSU102} from "../apis/calculator.ts";
-// import {convertToLocale} from "../apis/utils.ts";
 
 const EQUITY_TYPES: string[] = ['RSU', 'ESOP'];
 
