@@ -79,7 +79,7 @@ const EquityForm = ({ onFormSubmit }: FormProps) => {
           <NumericInput
             value={formik.values.conversionRate}
             onChange={formik.handleChange}
-            label="Amount"
+            label="Conversion"
             name="conversionRate"
           />
         </div>
